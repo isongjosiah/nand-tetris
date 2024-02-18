@@ -7,15 +7,19 @@ import (
 	"path"
 )
 
+type Parser struct {
+	FilePath string
+	File     *os.File
+}
+
 /*
-FileReader parses an assembly file (ends in .asm) and generates a symbol table.
+FileReader parses an assembly file (ends in .asm) .
 - It accepts a file path, ensures it is a valid file and confirms that it is an asm file
-- Constructs a symbol table (labels and variables) and adds it to the global symbol table containing predefined symbols
 */
-func FileReader(filePath string) error {
+func (p *Parser) FileReader() error {
 
 	// validate this file exists or is valid
-	fileInfo, err := os.Stat(filePath)
+	fileInfo, err := os.Stat(p.FilePath)
 	if err != nil {
 		return err
 	}
@@ -27,7 +31,20 @@ func FileReader(filePath string) error {
 	}
 
 	// read the file
+	file, err := os.Open(p.FilePath)
+	if err != nil {
+		return errors.New(fmt.Sprintf("unable to open file %s. %v", baseName, err.Error()))
+	}
+	p.File = file
 
 	return nil
+}
 
+/*
+NewParser creates a new instance of the parser with the provided file path
+*/
+func NewParser(filePath string) *Parser {
+	return &Parser{
+		FilePath: filePath,
+	}
 }

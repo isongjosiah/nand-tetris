@@ -1,3 +1,3 @@
-module github.com/isongjosiah/hack/nand-tetris
+module nand2Tetris
 
 go 1.21
